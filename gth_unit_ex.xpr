@@ -277,13 +277,7 @@
     </Run>
     <Run Id="gth_unit_synth_1" Type="Ft3:Synth" SrcSet="gth_unit" Part="xcku040-ffva1156-2-e" ConstrsSet="gth_unit" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/gth_unit_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
-<<<<<<< HEAD
-        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2019">
-          <Desc>Vivado Synthesis Defaults</Desc>
-        </StratHandle>
-=======
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2019"/>
->>>>>>> send_count
         <Step Id="synth_design"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
