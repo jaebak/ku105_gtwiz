@@ -382,6 +382,7 @@ module gth_unit_example_top (
   assign cm0_gtrefclk00_int = mgtrefclk1_x0y3_int;
 
   wire[255:0] ila_rx;
+  assign ila_rx[182:167] = ch0_rxctrl3_int;
   assign ila_rx[166] = link_status_out;
   assign ila_rx[165] = prbs_match_int[0];
   assign ila_rx[164] = ~hb0_gtwiz_reset_rx_done_int;
@@ -404,6 +405,7 @@ module gth_unit_example_top (
 
   
   wire[255:0] ila_tx;
+  assign ila_rx[182:167] = ch0_rxctrl3_int;
   assign ila_tx[166] = link_status_out;
   assign ila_tx[165] = prbs_match_int[0];
   assign ila_tx[164] = ~hb0_gtwiz_reset_rx_done_int;
@@ -423,6 +425,7 @@ module gth_unit_example_top (
     .clk (hb0_gtwiz_userclk_tx_usrclk2_int),
     .probe0 (ila_tx)
   );
+
 
   // ===================================================================================================================
   // USER CLOCKING RESETS
@@ -592,12 +595,23 @@ module gth_unit_example_top (
   // or data connections. It also resets the receiver in the event of link loss in an attempt to regain link, so please
   // note the possibility that this behavior can have the effect of overriding or disturbing user-provided inputs that
   // destabilize the data stream. It is a demonstration only and can be modified to suit your system needs.
+  //gth_unit_example_init example_init_inst (
+  //  .clk_freerun_in  (hb_gtwiz_reset_clk_freerun_buf_int),
+  //  .reset_all_in    (hb_gtwiz_reset_all_int),
+  //  .tx_init_done_in (gtwiz_reset_tx_done_int),
+  //  .rx_init_done_in (gtwiz_reset_rx_done_int),
+  //  .rx_data_good_in (sm_link),
+  //  .reset_all_out   (hb_gtwiz_reset_all_init_int),
+  //  .reset_rx_out    (hb_gtwiz_reset_rx_datapath_init_int),
+  //  .init_done_out   (init_done_int),
+  //  .retry_ctr_out   (init_retry_ctr_int)
+  //);
   gth_unit_example_init example_init_inst (
     .clk_freerun_in  (hb_gtwiz_reset_clk_freerun_buf_int),
     .reset_all_in    (hb_gtwiz_reset_all_int),
     .tx_init_done_in (gtwiz_reset_tx_done_int),
     .rx_init_done_in (gtwiz_reset_rx_done_int),
-    .rx_data_good_in (sm_link),
+    .rx_data_good_in (1'b1),
     .reset_all_out   (hb_gtwiz_reset_all_init_int),
     .reset_rx_out    (hb_gtwiz_reset_rx_datapath_init_int),
     .init_done_out   (init_done_int),

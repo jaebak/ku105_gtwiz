@@ -92,7 +92,7 @@ module gth_unit_example_stimulus_8b10b (
   // Declare a txdata vector to be driven by the PRBS generator, a txdata vector to be driven by a comma alignment
   // character, and a txdata register that is used to synchronously capture and drive one of the two. Perform other
   // continuous assignments required for this use mode.
-  wire   [31:0] txdata_prbs;
+  reg   [31:0] txdata_prbs = 32'b0;
   wire   [31:0] txdata_char = {4{8'hBC}};
   reg    [31:0] txdata_reg  = 32'b0;
   reg    [7:0]  txctrl2_reg = 8'b0;
@@ -117,6 +117,7 @@ module gth_unit_example_stimulus_8b10b (
     end
     else begin
       if (&prbs_slt_ctr) begin
+        txdata_prbs <= txdata_prbs+1;
         txdata_reg  <= txdata_prbs;
         txctrl2_reg <= 8'b0;
       end
@@ -147,7 +148,7 @@ module gth_unit_example_stimulus_8b10b (
     .CLK      (gtwiz_userclk_tx_usrclk2_in),
     .DATA_IN  (32'b0),
     .EN       (prbs_any_gen_en_int),
-    .DATA_OUT (txdata_prbs)
+    .DATA_OUT (open)
   );
 
 

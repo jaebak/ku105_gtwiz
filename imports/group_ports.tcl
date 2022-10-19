@@ -1,4 +1,5 @@
 # Run by source group_ports.tcl
+create_hw_probe -m probe0[182:167]   rx_ch0_rxctrl3_int[15:0]            [get_hw_ilas hw_ila_1]            
 create_hw_probe -m probe0[166]      rx_link_status_out                  [get_hw_ilas hw_ila_1]
 create_hw_probe -m probe0[165]      rx_prbs_match_int                   [get_hw_ilas hw_ila_1]
 create_hw_probe -m probe0[164]      rx_hb0_gtwiz_reset_rx_done_int      [get_hw_ilas hw_ila_1]
@@ -15,6 +16,7 @@ create_hw_probe -m probe0[79:64]    rx_ch0_rxctrl0_int[15:0]            [get_hw_
 create_hw_probe -m probe0[63:32]    rx_hb0_gtwiz_userdata_tx_int[31:0]  [get_hw_ilas hw_ila_1]
 create_hw_probe -m probe0[31:0]     rx_hb0_gtwiz_userdata_rx_int[31:0]  [get_hw_ilas hw_ila_1]
 
+create_hw_probe -m probe0[182:167]  tx_ch0_rxctrl3_int[15:0]            [get_hw_ilas hw_ila_2]            
 create_hw_probe -m probe0[166]      tx_link_status_out                  [get_hw_ilas hw_ila_2]
 create_hw_probe -m probe0[165]      tx_prbs_match_int                   [get_hw_ilas hw_ila_2]
 create_hw_probe -m probe0[164]      tx_hb0_gtwiz_reset_rx_done_int      [get_hw_ilas hw_ila_2]
