@@ -77,7 +77,6 @@ set_property package_pin M6 [get_ports mgtrefclk1_x0y3_p]
 # Clock constraints for clocks provided as inputs to the core
 # Note: the IP core-level XDC constrains clocks produced by the core, which drive user clocks via helper blocks
 # ----------------------------------------------------------------------------------------------------------------------
-create_clock -name clk_freerun -period 8.0 [get_ports hb_gtwiz_reset_clk_freerun_in]
 create_clock -name clk_mgtrefclk1_x0y3_p -period 8.75 [get_ports mgtrefclk1_x0y3_p]
 
 # False path constraints
@@ -94,3 +93,22 @@ set_false_path -to [get_pins -filter {REF_PIN_NAME=~*PRE} -of_objects [get_cells
 
 set_false_path -to [get_cells -hierarchical -filter {NAME =~ *gtwiz_userclk_tx_inst/*gtwiz_userclk_tx_active_*_reg}] -quiet
 set_false_path -to [get_cells -hierarchical -filter {NAME =~ *gtwiz_userclk_rx_inst/*gtwiz_userclk_rx_active_*_reg}] -quiet
+
+set_property -dict { PACKAGE_PIN G10  IOSTANDARD LVDS} [get_ports hb_gtwiz_reset_clk_freerun_in_p]
+set_property -dict { PACKAGE_PIN F10  IOSTANDARD LVDS} [get_ports hb_gtwiz_reset_clk_freerun_in_n]
+create_clock -name CLK_125_group  -period 8    [get_ports hb_gtwiz_reset_clk_freerun_in_p]
+set_clock_groups -group [get_clocks CLK_125_group -include_generated_clocks] -asynchronous
+
+set_property -dict {package_pin V2} [get_ports ch0_gthrxp_in]
+set_property -dict {package_pin V1} [get_ports ch0_gthrxn_in]
+set_property -dict {package_pin W4} [get_ports ch0_gthtxp_out]
+set_property -dict {package_pin W3} [get_ports ch0_gthtxn_out]
+
+# GPIO_SW_N
+set_property -dict { PACKAGE_PIN AD10  IOSTANDARD LVCMOS18} [get_ports hb_gtwiz_reset_all_in]
+# GPIO_SW_S
+set_property -dict { PACKAGE_PIN AF8  IOSTANDARD LVCMOS18} [get_ports link_down_latched_reset_in]
+# GPIO_LED_0
+set_property -dict { PACKAGE_PIN AP8  IOSTANDARD LVCMOS18} [get_ports link_status_out]
+# GPIO_LED_1
+set_property -dict { PACKAGE_PIN H23  IOSTANDARD LVCMOS18} [get_ports link_down_latched_out]

@@ -68,7 +68,8 @@ module gth_unit_example_top (
   output wire ch0_gthtxp_out,
 
   // User-provided ports for reset helper block(s)
-  input  wire hb_gtwiz_reset_clk_freerun_in,
+  input  wire hb_gtwiz_reset_clk_freerun_in_p,
+  input  wire hb_gtwiz_reset_clk_freerun_in_n,
   input  wire hb_gtwiz_reset_all_in,
 
   // PRBS-based link status ports
@@ -78,6 +79,7 @@ module gth_unit_example_top (
 
 );
 
+  reg link_down_latched_out = 1'b1;
 
   // ===================================================================================================================
   // PER-CHANNEL SIGNAL ASSIGNMENTS
@@ -345,10 +347,17 @@ module gth_unit_example_top (
   assign hb_gtwiz_reset_all_int = hb_gtwiz_reset_all_buf_int || hb_gtwiz_reset_all_init_int || hb_gtwiz_reset_all_vio_int;
 
   // Globally buffer the free-running input clock
+  wire hb_gtwiz_reset_clk_freerun_in_buf;
   wire hb_gtwiz_reset_clk_freerun_buf_int;
+  
+  IBUFDS ibuf_clk_freerun_inst (
+    .I (hb_gtwiz_reset_clk_freerun_in_p),
+    .IB (hb_gtwiz_reset_clk_freerun_in_n),
+    .O (hb_gtwiz_reset_clk_freerun_in_buf)
+  );
 
   BUFG bufg_clk_freerun_inst (
-    .I (hb_gtwiz_reset_clk_freerun_in),
+    .I (hb_gtwiz_reset_clk_freerun_in_buf),
     .O (hb_gtwiz_reset_clk_freerun_buf_int)
   );
 
@@ -372,6 +381,48 @@ module gth_unit_example_top (
 
   assign cm0_gtrefclk00_int = mgtrefclk1_x0y3_int;
 
+  wire[255:0] ila_rx;
+  assign ila_rx[166] = link_status_out;
+  assign ila_rx[165] = prbs_match_int[0];
+  assign ila_rx[164] = ~hb0_gtwiz_reset_rx_done_int;
+  assign ila_rx[163] = hb_gtwiz_reset_all_int;
+  assign ila_rx[162] = hb0_gtwiz_userclk_tx_active_int;
+  assign ila_rx[161] = hb0_gtwiz_userclk_tx_active_int;
+  assign ila_rx[160] = hb0_gtwiz_userclk_rx_active_int;
+  assign ila_rx[159:144] = ch0_txctrl2_int;
+  assign ila_rx[143:128] = ch0_txctrl1_int;
+  assign ila_rx[127:112] = ch0_txctrl0_int;
+  assign ila_rx[111:96] = ch0_rxctrl2_int;
+  assign ila_rx[95:80] = ch0_rxctrl1_int;
+  assign ila_rx[79:64] = ch0_rxctrl0_int;
+  assign ila_rx[63:32] = hb0_gtwiz_userdata_tx_int;
+  assign ila_rx[31:0] = hb0_gtwiz_userdata_rx_int;
+  ila_optics ila_optics_rx (
+    .clk (hb0_gtwiz_userclk_rx_usrclk2_int),
+    .probe0 (ila_rx)
+  );
+
+  
+  wire[255:0] ila_tx;
+  assign ila_tx[166] = link_status_out;
+  assign ila_tx[165] = prbs_match_int[0];
+  assign ila_tx[164] = ~hb0_gtwiz_reset_rx_done_int;
+  assign ila_tx[163] = hb_gtwiz_reset_all_int;
+  assign ila_tx[162] = hb0_gtwiz_userclk_tx_active_int;
+  assign ila_tx[161] = hb0_gtwiz_userclk_tx_active_int;
+  assign ila_tx[160] = hb0_gtwiz_userclk_rx_active_int;
+  assign ila_tx[159:144] = ch0_txctrl2_int;
+  assign ila_tx[143:128] = ch0_txctrl1_int;
+  assign ila_tx[127:112] = ch0_txctrl0_int;
+  assign ila_tx[111:96] = ch0_rxctrl2_int;
+  assign ila_tx[95:80] = ch0_rxctrl1_int;
+  assign ila_tx[79:64] = ch0_rxctrl0_int;
+  assign ila_tx[63:32] = hb0_gtwiz_userdata_tx_int;
+  assign ila_tx[31:0] = hb0_gtwiz_userdata_rx_int;
+  ila_optics ila_optics_tx (
+    .clk (hb0_gtwiz_userclk_tx_usrclk2_int),
+    .probe0 (ila_tx)
+  );
 
   // ===================================================================================================================
   // USER CLOCKING RESETS
